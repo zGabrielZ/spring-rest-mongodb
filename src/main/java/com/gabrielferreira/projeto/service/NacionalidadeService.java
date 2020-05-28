@@ -23,5 +23,9 @@ public class NacionalidadeService {
 		Optional<Nacionalidade> nacionalidade = nacionalidadeRepositorio.findById(id);
 		return nacionalidade.orElseThrow(() -> new EntidadeNotFoundException("Nacionalidade não encontrado"));
 	}
+	
+	public Nacionalidade inserir(Nacionalidade nacionalidade) {		
+		return nacionalidadeRepositorio.save(nacionalidade);
+	}
 
 }

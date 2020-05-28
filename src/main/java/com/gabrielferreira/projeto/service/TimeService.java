@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.gabrielferreira.projeto.entidade.Nacionalidade;
 import com.gabrielferreira.projeto.entidade.Time;
 import com.gabrielferreira.projeto.exceptions.EntidadeNotFoundException;
+import com.gabrielferreira.projeto.repositorio.NacionalidadeRepositorio;
 import com.gabrielferreira.projeto.repositorio.TimeRepositorio;
 
 
@@ -19,7 +20,7 @@ public class TimeService {
 	private TimeRepositorio timeRepositorio;
 	
 	@Autowired
-	private NacionalidadeService nacionalidadeService;
+	private NacionalidadeRepositorio nacionalidadeRepositorio;
 
 	public List<Time> consultarTodos(){
 		return timeRepositorio.findAll();
@@ -37,8 +38,10 @@ public class TimeService {
 	
 	public Time inserir(Time time) {		
 
-		Nacionalidade nacionalidade = nacionalidadeService.consultarPorId(time.getNacionalidade().getId());
-		time.setNacionalidade(nacionalidade);
+		Optional<Nacionalidade> nacionalidade = nacionalidadeRepositorio.findById(time.getNacionalidade().getId());
+		if(!nacionalidade.isPresent()) {
+			throw new EntidadeNotFoundException("Nacionalidade não encontrado");
+		}
 		return timeRepositorio.save(time);
 	}
 	

@@ -43,7 +43,6 @@ public class JogadorService {
 	
 	public Jogador inserir(String timeId,Jogador jogador) {
 		
-		
 		Time time = timeService.consultarPorId(timeId);
 		
 		Nacionalidade nacionalidade = nacionalidadeService.consultarPorId(jogador.getNacionalidade().getId());
