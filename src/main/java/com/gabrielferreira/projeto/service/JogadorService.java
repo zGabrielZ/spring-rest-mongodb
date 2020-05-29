@@ -10,6 +10,7 @@ import com.gabrielferreira.projeto.entidade.Nacionalidade;
 import com.gabrielferreira.projeto.entidade.Time;
 import com.gabrielferreira.projeto.exceptions.EntidadeNotFoundException;
 import com.gabrielferreira.projeto.repositorio.JogadorRepositorio;
+import com.gabrielferreira.projeto.repositorio.NacionalidadeRepositorio;
 import com.gabrielferreira.projeto.repositorio.TimeRepositorio;
 
 @Service
@@ -19,13 +20,11 @@ public class JogadorService {
 	private JogadorRepositorio jogadorRepositorio;
 	
 	@Autowired
-	private TimeService timeService;
-	
-	@Autowired
 	private TimeRepositorio timeRepositorio;
 	
 	@Autowired
-	private NacionalidadeService nacionalidadeService;
+	private NacionalidadeRepositorio nacionalidadeRepositorio;
+	
 
 	public List<Jogador> consultarTodos(String idTime){
 		return jogadorRepositorio.findAll();
@@ -37,40 +36,50 @@ public class JogadorService {
 	}
 	
 	public void deletar(String id) {
-		consultarPorId(id);
+		Optional<Jogador> jogador = jogadorRepositorio.findById(id);
+		if(!jogador.isPresent()) {
+			throw new EntidadeNotFoundException("Jogador não encontrado");
+		}
 		jogadorRepositorio.deleteById(id);
 	}
 	
 	public Jogador inserir(String timeId,Jogador jogador) {
 		
-		Time time = timeService.consultarPorId(timeId);
+		Optional<Time> time = timeRepositorio.findById(timeId);
 		
-		Nacionalidade nacionalidade = nacionalidadeService.consultarPorId(jogador.getNacionalidade().getId());
-
-		jogador.setTime(time);
-		jogador.setNacionalidade(nacionalidade);
+		if(!time.isPresent()) {
+			throw new EntidadeNotFoundException("Time não encontrado");
+		}
+		
+		Optional<Nacionalidade> nacionalidade = nacionalidadeRepositorio.findById(jogador.getNacionalidade().getId());
+		
+		if(!nacionalidade.isPresent()) {
+			throw new EntidadeNotFoundException("Nacionalidade não encontrado");
+		}
+		
+		jogador.setTime(time.get());
+		jogador.setNacionalidade(nacionalidade.get());
 		
 		jogadorRepositorio.save(jogador);
 		
-		time.getJogadores().add(jogador);
+		time.get().getJogadores().add(jogador);
 		
-		timeRepositorio.save(time);
+		timeRepositorio.save(time.get());
 		
 		return jogadorRepositorio.save(jogador);
 	}
 	
-	public Jogador atualizar(String timeId,String id,Jogador jogador) {
-		Jogador entidade = consultarPorId(id);
+	public Jogador atualizar(String id,Jogador jogador) {
 		
-		Time time = timeService.consultarPorId(timeId);
+		Optional<Jogador> entidade = jogadorRepositorio.findById(id);
 		
-		updateData(entidade,jogador);
-
-		entidade.setTime(time);
+		if(!entidade.isPresent()) {
+			throw new EntidadeNotFoundException("Jogador não encontrado");
+		}
+	
+		updateData(entidade.get(),jogador);
 		
-		timeRepositorio.save(time);
-		
-		return jogadorRepositorio.save(entidade);
+		return jogadorRepositorio.save(entidade.get());
 	}
 	
 	private void updateData(Jogador entidade,Jogador jogador) {

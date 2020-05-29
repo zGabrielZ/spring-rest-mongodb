@@ -32,7 +32,10 @@ public class TimeService {
 	}
 	
 	public void deletar(String id) {
-		consultarPorId(id);
+		Optional<Time> time = timeRepositorio.findById(id);
+		if(!time.isPresent()) {
+			throw new EntidadeNotFoundException("Time não encontrado");
+		}
 		timeRepositorio.deleteById(id);
 	}
 	
@@ -42,13 +45,17 @@ public class TimeService {
 		if(!nacionalidade.isPresent()) {
 			throw new EntidadeNotFoundException("Nacionalidade não encontrado");
 		}
+		time.setNacionalidade(nacionalidade.get());
 		return timeRepositorio.save(time);
 	}
 	
 	public Time atualizar(String id,Time time) {			
-		Time entidade = consultarPorId(id);
-		updateData(entidade,time);
-		return timeRepositorio.save(entidade);
+		Optional<Time> entidade = timeRepositorio.findById(id);
+		if(!entidade.isPresent()) {
+			throw new EntidadeNotFoundException("Time não encontrado");
+		}
+		updateData(entidade.get(),time);
+		return timeRepositorio.save(entidade.get());
 	}
 	
 	
