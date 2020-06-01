@@ -13,4 +13,5 @@ public interface TimeRepositorio extends MongoRepository<Time,String>{
 
 	@Query("{ 'nome': { $regex: ?0, $options: 'i' } }")
 	List<Time> procurarNome(String nome);
+
 }

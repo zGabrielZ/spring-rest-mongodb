@@ -29,7 +29,7 @@ public class JogadorService {
 	public List<Jogador> consultarTodos(String idTime){
 		return jogadorRepositorio.findAll();
 	}
-	
+		
 	public Jogador consultarPorId(String id) {
 		Optional<Jogador> jogador = jogadorRepositorio.findById(id);
 		return jogador.orElseThrow(() -> new EntidadeNotFoundException("Jogador não encontrado"));
@@ -84,7 +84,6 @@ public class JogadorService {
 	
 	private void updateData(Jogador entidade,Jogador jogador) {
 		entidade.setNome(jogador.getNome());
-		entidade.setTime(jogador.getTime());
 		entidade.setNumeroDaCamisa(jogador.getNumeroDaCamisa());
 	}
 	
