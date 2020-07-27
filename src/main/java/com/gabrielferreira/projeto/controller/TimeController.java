@@ -48,7 +48,7 @@ public class TimeController {
 		return ResponseEntity.ok().body(timeDTO);
 	}
 	
-	@GetMapping(value="/nome")
+	@PostMapping(value="/nome")
  	public ResponseEntity<List<Time>> procurarNome(@RequestParam(value="nome", defaultValue="") String nome) {
 		nome = URL.decodeParam(nome);
 		List<Time> list = timeService.procurarNome(nome);

@@ -19,6 +19,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import com.gabrielferreira.projeto.exceptions.EntidadeNotFoundException;
 import com.gabrielferreira.projeto.exceptions.Erro;
+import com.gabrielferreira.projeto.exceptions.RegraDeNegocioException;
 import com.gabrielferreira.projeto.exceptions.Erro.Campo;
 
 @ControllerAdvice
@@ -52,6 +53,15 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 	public ResponseEntity<Erro> recursoNotFound(EntidadeNotFoundException e,
 			HttpServletRequest req){
 		erro.setStatus(HttpStatus.NOT_FOUND.value());
+		erro.setTitulo(e.getMessage());
+		erro.setData((OffsetDateTime.now()));
+		return ResponseEntity.status(erro.getStatus()).body(erro);
+	}
+	
+	@ExceptionHandler(RegraDeNegocioException.class)
+	public ResponseEntity<Erro> badRequest(RegraDeNegocioException e,
+			HttpServletRequest req){
+		erro.setStatus(HttpStatus.BAD_REQUEST.value());
 		erro.setTitulo(e.getMessage());
 		erro.setData((OffsetDateTime.now()));
 		return ResponseEntity.status(erro.getStatus()).body(erro);

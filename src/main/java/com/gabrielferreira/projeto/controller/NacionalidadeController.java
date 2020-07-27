@@ -7,6 +7,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -45,6 +46,12 @@ public class NacionalidadeController {
 	public NacionalidadeDTO inserir(@Valid @RequestBody NacionalidadeInserirDTO nacionalidadeInserirDTO) {
 		Nacionalidade nacionalidade = toEntityInserir(nacionalidadeInserirDTO);
 		return toModel(nacionalidadeService.inserir(nacionalidade));
+	}
+	
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Void> deletar(@PathVariable String id){
+		nacionalidadeService.deletar(id);
+		return ResponseEntity.noContent().build();
 	}
 	
 	private Nacionalidade toEntityInserir(NacionalidadeInserirDTO dto) {

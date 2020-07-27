@@ -9,6 +9,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,9 +21,12 @@ public class Time implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
+	private static final String MY_TIME_ZONE="GMT-3";
+	
 	@Id
 	private String id;
 	private String nome;
+	@JsonFormat(timezone = MY_TIME_ZONE)
 	private Date dataFundacao;
 	
 	private Nacionalidade nacionalidade;

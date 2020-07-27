@@ -7,4 +7,5 @@ import com.gabrielferreira.projeto.entidade.Nacionalidade;
 @Repository
 public interface NacionalidadeRepositorio extends MongoRepository<Nacionalidade,String>{
 
+	boolean existsByNome(String nome);
 }
