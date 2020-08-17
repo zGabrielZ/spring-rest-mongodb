@@ -43,6 +43,10 @@ public class JogadorService {
 		jogadorRepositorio.deleteById(id);
 	}
 	
+	public void deletarJogadores(Time time) {
+		jogadorRepositorio.deleteAll(time.getJogadores());
+	}
+	
 	public Jogador inserir(String timeId,Jogador jogador) {
 		
 		Optional<Time> time = timeRepositorio.findById(timeId);

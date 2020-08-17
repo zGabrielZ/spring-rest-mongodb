@@ -23,6 +23,7 @@ import com.gabrielferreira.projeto.entidade.Time;
 import com.gabrielferreira.projeto.entidade.dto.TimeAtualizarDTO;
 import com.gabrielferreira.projeto.entidade.dto.TimeDTO;
 import com.gabrielferreira.projeto.entidade.dto.TimeInserirDTO;
+import com.gabrielferreira.projeto.service.JogadorService;
 import com.gabrielferreira.projeto.service.TimeService;
 import com.gabrielferreira.projeto.utils.URL;
 
@@ -32,6 +33,9 @@ public class TimeController {
 	
 	@Autowired
 	private TimeService timeService;
+	
+	@Autowired
+	private JogadorService jogadorService;
 	
 	@Autowired
 	private ModelMapper modelMapper;
@@ -57,7 +61,9 @@ public class TimeController {
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> deletar(@PathVariable String id){
-		timeService.deletar(id);
+		Time time = timeService.consultarPorId(id);
+		timeService.deletar(time.getId());
+		jogadorService.deletarJogadores(time);
 		return ResponseEntity.noContent().build();
 	}
 	
